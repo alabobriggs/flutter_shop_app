@@ -10,7 +10,8 @@ class MyApp extends StatelessWidget {
       title: 'MyShop',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.purple,
+        accentColor: Colors.deepOrange
       ),
       home: ProductOverviewScreen(),
     );
