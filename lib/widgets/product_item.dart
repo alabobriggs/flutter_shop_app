@@ -53,6 +53,7 @@ class ProductItem extends StatelessWidget {
                 price: product.price,
                 title: product.title,
               );
+              
             },
             color: Theme.of(context).accentColor,
           ),

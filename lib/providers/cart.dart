@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:shop_app/models/cart.dart';
 
 class CartProvider with ChangeNotifier {
-  Map<String, CartItem> _items;
+  Map<String, CartItem> _items = {};
 
   Map<String, CartItem> get getItems {
     return {..._items};
+  }
+
+  int get itemCount {
+    return _items.length;
   }
 
   void addItem({
@@ -13,7 +17,8 @@ class CartProvider with ChangeNotifier {
     double price,
     String title,
   }) {
-    if (_items.containsKey(productId)) {
+    print(productId);
+    if (_items == null ? false : _items.containsKey(productId)) {
       _items.update(
         productId,
         (existingCartItem) => CartItem(
@@ -34,5 +39,7 @@ class CartProvider with ChangeNotifier {
         ),
       );
     }
+
+    notifyListeners();
   }
 }
