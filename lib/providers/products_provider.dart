@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import './product_model_provider.dart';
 
 class ProductsProvider with ChangeNotifier {
+  bool _showFavouritesOnly = false;
+
   List<ProductModelProvider> _items = [
     ProductModelProvider(
       id: 'p1',
@@ -39,11 +41,24 @@ class ProductsProvider with ChangeNotifier {
   ];
 
   List<ProductModelProvider> get items {
+    if (_showFavouritesOnly) {
+      return _items.where((productItem) => productItem.isFavourite).toList();
+    }
     return [..._items];
   }
 
   ProductModelProvider findById(String productId) {
     return _items.firstWhere((prod) => prod.id == productId);
+  }
+
+  void showFavouritesOnly() {
+    _showFavouritesOnly = true;
+    notifyListeners();
+  }
+
+  void showAll() {
+    _showFavouritesOnly = false;
+    notifyListeners();
   }
 
   void addProduct() {

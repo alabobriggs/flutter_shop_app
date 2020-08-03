@@ -6,7 +6,10 @@ import '../screens/product_detail_screen.dart';
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<ProductModelProvider>(context, listen: false);
+    final product = Provider.of<ProductModelProvider>(
+      context,
+      listen: false,
+    );
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
@@ -30,7 +33,7 @@ class ProductItem extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           leading: Consumer<ProductModelProvider>(
-            builder: (ctx, product, child) => IconButton(
+            builder: (ctx, product, _) => IconButton(
               icon: Icon(
                 product.isFavourite ? Icons.favorite : Icons.favorite_border,
               ),
