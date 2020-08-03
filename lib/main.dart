@@ -15,7 +15,9 @@ class MyApp extends StatelessWidget {
         title: 'MyShop',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-            primarySwatch: Colors.purple, accentColor: Colors.deepOrange),
+          primarySwatch: Colors.purple,
+          accentColor: Colors.deepOrange,
+        ),
         home: ProductOverviewScreen(),
         routes: {
           ProductDetailScreen.routePath: (ctx) => ProductDetailScreen(),
