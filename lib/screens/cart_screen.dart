@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/providers/cart.dart';
+import '../providers/cart.dart';
 
 class CartScreen extends StatelessWidget {
   static const routePath = '/cart';
@@ -20,21 +20,33 @@ class CartScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
                     "Total",
                     style: const TextStyle(fontSize: 20),
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
+                  Spacer(),
                   Chip(
                     label: Text(
                       "\$${cart.totalAmount}",
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(
+                        fontSize: 20,
+                        color:
+                            Theme.of(context).primaryTextTheme.headline6.color,
+                      ),
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
+                  FlatButton(
+                    onPressed: () {},
+                    child: Text(
+                      'Order now',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
