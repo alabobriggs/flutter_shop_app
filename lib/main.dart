@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
           create: (ctx) => OrdersProvider(),
         ),
       ],
+      
       child: MaterialApp(
         title: 'MyShop',
         debugShowCheckedModeBanner: false,
