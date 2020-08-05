@@ -4,10 +4,12 @@ import '../providers/orders.dart' as orderProvider;
 import '../widgets/order_item.dart';
 
 class OrdersScreen extends StatelessWidget {
+  static const routeName = '/orders';
+
   @override
   Widget build(BuildContext context) {
     final ordersData = Provider.of<orderProvider.OrdersProvider>(context);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Your Orders'),

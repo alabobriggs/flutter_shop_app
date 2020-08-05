@@ -19,7 +19,7 @@ class ProductItem extends StatelessWidget {
         child: GestureDetector(
           onTap: () {
             Navigator.of(context).pushNamed(
-              ProductDetailScreen.routePath,
+              ProductDetailScreen.routeName,
               arguments: product.id,
             );
           },
@@ -53,7 +53,6 @@ class ProductItem extends StatelessWidget {
                 price: product.price,
                 title: product.title,
               );
-              
             },
             color: Theme.of(context).accentColor,
           ),
