@@ -53,6 +53,7 @@ class ProductItem extends StatelessWidget {
                 price: product.price,
                 title: product.title,
               );
+              Scaffold.of(context).hideCurrentSnackBar();
               Scaffold.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
@@ -60,6 +61,12 @@ class ProductItem extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   duration: Duration(seconds: 2),
+                  action: SnackBarAction(
+                    label: "Undo",
+                    onPressed: () {
+                      cart.removeItem(product.id);
+                    },
+                  ),
                 ),
               );
             },
