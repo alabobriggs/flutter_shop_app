@@ -32,6 +32,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   void _updateImageUrl() {
     if (!_imageUrlFocusNode.hasFocus) {
+      if (!_imageUrlFocusNode.hasFocus) {
+        if (_imageUrlController.text.isEmpty ||
+            !_imageUrlController.text.startsWith('http') ||
+            !_imageUrlController.text.startsWith('https')) {
+          return;
+        }
+
+        setState(() {});
+      }
       setState(() {});
     }
   }
@@ -103,6 +112,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   if (value.isEmpty) {
                     return 'Please enter price';
                   }
+                  if (double.tryParse(value) == null) {
+                    return 'Please enter a valid number';
+                  }
+                  if (double.parse(value) <= 0) {
+                    return 'Please enter a number greater than zero';
+                  }
                   return null;
                 },
                 onFieldSubmitted: (_) {
@@ -120,6 +135,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: "Description"),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please enter a description';
+                  }
+                  if (value.length < 10) {
+                    return 'Description should be at least 10 characters long';
+                  }
+
+                  return null;
+                },
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
                 focusNode: _descriptionFocusNode,
@@ -162,6 +187,17 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     child: TextFormField(
                       decoration: InputDecoration(labelText: 'Image URL'),
                       keyboardType: TextInputType.url,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter a description';
+                        }
+                        if (!value.startsWith('http') &&
+                            !value.startsWith('http')) {
+                          return 'Please enter a valid image';
+                        }
+
+                        return null;
+                      },
                       textInputAction: TextInputAction.done,
                       controller: _imageUrlController,
                       focusNode: _imageUrlFocusNode,
