@@ -17,7 +17,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _imageUrlFocusNode = FocusNode();
   final _form = GlobalKey<FormState>();
 
-  var _editedProduct = ProductModelProvider(
+  ProductModelProvider _editedProduct = ProductModelProvider(
     id: null,
     title: '',
     price: 0,
@@ -25,23 +25,50 @@ class _EditProductScreenState extends State<EditProductScreen> {
     imageUrl: '',
   );
 
+  Map<String, dynamic> _initValues = {
+    'title': '',
+    'price': '',
+    'description': '',
+    'imageUrl': '',
+  };
+
+  bool _init = true;
+
   @override
   void initState() {
     super.initState();
-
     _imageUrlFocusNode.addListener(_updateImageUrl);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_init) {
+      final productId = ModalRoute.of(context).settings.arguments as String;
+
+      if (productId != null) {
+        _editedProduct = Provider.of<ProductsProvider>(context, listen: false)
+            .findById(productId);
+
+        _initValues = {
+          'id': _editedProduct.id,
+          'title': _editedProduct.title,
+          'price': _editedProduct.price.toString(),
+          'description': _editedProduct.description,
+        };
+
+        _imageUrlController.text = _editedProduct.imageUrl;
+      }
+    }
+    _init = false;
   }
 
   void _updateImageUrl() {
     if (!_imageUrlFocusNode.hasFocus) {
-      if (!_imageUrlFocusNode.hasFocus) {
-        if (_imageUrlController.text.isEmpty ||
-            !_imageUrlController.text.startsWith('http') ||
-            !_imageUrlController.text.startsWith('https')) {
-          return;
-        }
-
-        setState(() {});
+      if (_imageUrlController.text.isEmpty ||
+          !_imageUrlController.text.startsWith('http') ||
+          !_imageUrlController.text.startsWith('https')) {
+        return;
       }
       setState(() {});
     }
@@ -91,6 +118,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           child: ListView(
             children: <Widget>[
               TextFormField(
+                initialValue: _initValues['title'],
                 decoration: InputDecoration(labelText: "Title"),
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) {
@@ -107,6 +135,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
               ),
               TextFormField(
+                initialValue: _initValues['price'],
                 decoration: InputDecoration(labelText: "Price"),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
@@ -137,6 +166,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 },
               ),
               TextFormField(
+                initialValue: _initValues['description'],
                 decoration: InputDecoration(labelText: "Description"),
                 validator: (value) {
                   if (value.isEmpty) {
