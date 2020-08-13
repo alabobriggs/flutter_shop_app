@@ -118,8 +118,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
         Navigator.of(context).pop();
       } catch (err) {
-        print(err);
-        showDialog(
+        await showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
             title: Text('An error occured'),
@@ -134,6 +133,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             ],
           ),
         );
+      } finally {
         setState(() {
           _isLoading = false;
         });
