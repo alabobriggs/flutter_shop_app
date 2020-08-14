@@ -97,31 +97,17 @@ class _EditProductScreenState extends State<EditProductScreen> {
     });
 
     if (_editedProduct.id != null) {
-      Provider.of<ProductsProvider>(context, listen: false).updateProduct(
-        id: _editedProduct.id,
-        newProduct: _editedProduct,
-      );
-
-      setState(() {
-        _isLoading = false;
-      });
-
-      Navigator.of(context).pop();
-    } else {
       try {
         await Provider.of<ProductsProvider>(context, listen: false)
-            .addProduct(_editedProduct);
-
-        setState(() {
-          _isLoading = false;
-        });
-
-        Navigator.of(context).pop();
+            .updateProduct(
+          id: _editedProduct.id,
+          newProduct: _editedProduct,
+        );
       } catch (err) {
         await showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
-            title: Text('An error occured'),
+            title: Text('Editing product failed'),
             content: Text(err.toString()),
             actions: <Widget>[
               FlatButton(
@@ -133,11 +119,33 @@ class _EditProductScreenState extends State<EditProductScreen> {
             ],
           ),
         );
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
       }
+    } else {
+      try {
+        await Provider.of<ProductsProvider>(context, listen: false)
+            .addProduct(_editedProduct);
+      } catch (err) {
+        await showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('Saving product failed'),
+            content: Text(err.toString()),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Okay'),
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+              )
+            ],
+          ),
+        );
+      }
+      setState(() {
+        _isLoading = false;
+      });
+
+      Navigator.of(context).pop();
     }
   }
 

@@ -61,8 +61,6 @@ class ProductsProvider with ChangeNotifier {
 
       Map<String, dynamic> savedProduct = json.decode(response.body);
 
-      print(savedProduct);
-
       final newProduct = ProductModelProvider(
         id: savedProduct['name'],
         title: product.title,
@@ -77,11 +75,21 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
-  void updateProduct({
+  Future<void> updateProduct({
     String id,
     ProductModelProvider newProduct,
-  }) {
+  }) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
+
+    await http.patch(
+      '$baseUrl/products/$id.json',
+      body: json.encode({
+        'title': newProduct.title,
+        'description': newProduct.description,
+        'imageUrl': newProduct.imageUrl,
+        'price': newProduct.price,
+      }),
+    );
 
     if (prodIndex > 0) {
       _items[prodIndex] = newProduct;
