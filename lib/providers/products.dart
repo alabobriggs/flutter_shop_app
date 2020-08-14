@@ -79,28 +79,45 @@ class ProductsProvider with ChangeNotifier {
     String id,
     ProductModelProvider newProduct,
   }) async {
-    final prodIndex = _items.indexWhere((prod) => prod.id == id);
+    try {
+      final prodIndex = _items.indexWhere((prod) => prod.id == id);
 
-    await http.patch(
-      '$baseUrl/products/$id.json',
-      body: json.encode({
-        'title': newProduct.title,
-        'description': newProduct.description,
-        'imageUrl': newProduct.imageUrl,
-        'price': newProduct.price,
-      }),
-    );
+      await http.patch(
+        '$baseUrl/products/$id.json',
+        body: json.encode({
+          'title': newProduct.title,
+          'description': newProduct.description,
+          'imageUrl': newProduct.imageUrl,
+          'price': newProduct.price,
+        }),
+      );
 
-    if (prodIndex > 0) {
-      _items[prodIndex] = newProduct;
+      if (prodIndex > 0) {
+        _items[prodIndex] = newProduct;
 
-      notifyListeners();
-    } else {}
+        notifyListeners();
+      }
+    } catch (err) {
+      throw err;
+    }
   }
 
   void deleteProduct(String id) {
-    _items.removeWhere((prod) => prod.id == id);
+    final int existingProductIndex = _items.indexWhere((prod) => prod.id == id);
+    ProductModelProvider existingProduct = _items[existingProductIndex];
+
+    _items.removeAt(existingProductIndex);
 
     notifyListeners();
+
+    http.delete('$baseUrl/products/$id.json').then((response) {
+      if (response.statusCode >= 400) {
+        throw Exception();
+      }
+      existingProduct = null;
+    }).catchError((_) {
+      _items.insert(existingProductIndex, existingProduct);
+      notifyListeners();
+    });
   }
 }
