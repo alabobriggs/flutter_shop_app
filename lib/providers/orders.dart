@@ -27,6 +27,21 @@ class OrdersProvider with ChangeNotifier {
     return [..._items];
   }
 
+  Future<void> fetchAndSetOrders() async {
+    try {
+      http.Response response = await http.get('$baseUrl/orders.json');
+      final fetchedproducts =
+          json.decode(response.body) as Map<String, dynamic>;
+
+      print(fetchedproducts);
+
+      notifyListeners();
+    } catch (err) {
+      print(err);
+      throw err;
+    }
+  }
+
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
     try {
       final timestamp = DateTime.now();
@@ -34,12 +49,14 @@ class OrdersProvider with ChangeNotifier {
         '$baseUrl/orders.json',
         body: json.encode({
           'amount': total,
-          'products': cartProducts.map((cp) => {
-            'id': cp.id,
-            'title': cp.title,
-            'quantity': cp.quantity,
-            'price': cp.price,
-          }).toList(),
+          'products': cartProducts
+              .map((cp) => {
+                    'id': cp.id,
+                    'title': cp.title,
+                    'quantity': cp.quantity,
+                    'price': cp.price,
+                  })
+              .toList(),
           'dateTime': timestamp.toIso8601String(),
         }),
       );
