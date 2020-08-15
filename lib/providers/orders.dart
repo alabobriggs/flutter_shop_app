@@ -21,20 +21,40 @@ class OrderItem {
 class OrdersProvider with ChangeNotifier {
   static String baseUrl = 'https://shop-app-2170f.firebaseio.com';
 
-  List<OrderItem> _items = [];
+  List<OrderItem> _orders = [];
 
   List<OrderItem> get orders {
-    return [..._items];
+    return [..._orders];
   }
 
   Future<void> fetchAndSetOrders() async {
     try {
       http.Response response = await http.get('$baseUrl/orders.json');
-      final fetchedproducts =
+      final extractedOrders =
           json.decode(response.body) as Map<String, dynamic>;
+      final List<OrderItem> loadedOrders = [];
 
-      print(fetchedproducts);
-
+      if (extractedOrders == null) {
+        return;
+      }
+      extractedOrders.forEach((orderId, orderData) {
+        loadedOrders.add(OrderItem(
+          id: orderId,
+          amount: orderData['amount'],
+          products: (orderData['products'] as List<dynamic>)
+              .map(
+                (item) => CartItem(
+                  id: item['id'],
+                  title: item['title'],
+                  quantity: item['quantity'],
+                  price: item['price'],
+                ),
+              )
+              .toList(),
+          dateTime: DateTime.parse(orderData['dateTime']),
+        ));
+      });
+      _orders = loadedOrders;
       notifyListeners();
     } catch (err) {
       print(err);
@@ -69,7 +89,7 @@ class OrdersProvider with ChangeNotifier {
         products: cartProducts,
         dateTime: timestamp,
       );
-      _items.insert(0, newOrder);
+      _orders.insert(0, newOrder);
       notifyListeners();
     } catch (err) {
       throw err;
@@ -77,7 +97,7 @@ class OrdersProvider with ChangeNotifier {
   }
 
   void clearOrders() {
-    _items = [];
+    _orders = [];
     notifyListeners();
   }
 }

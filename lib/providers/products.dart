@@ -25,7 +25,12 @@ class ProductsProvider with ChangeNotifier {
       http.Response response = await http.get('$baseUrl/products.json');
       final fetchedproducts =
           json.decode(response.body) as Map<String, dynamic>;
+
       final List<ProductModelProvider> loadedProducts = [];
+
+      if (fetchedproducts == null) {
+        return;
+      }
       fetchedproducts.forEach(
         (prodId, prodData) {
           loadedProducts.add(ProductModelProvider(
