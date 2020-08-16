@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import '../models/http_exception.dart';
 import 'dart:convert';
 import '../models/cart.dart';
 
