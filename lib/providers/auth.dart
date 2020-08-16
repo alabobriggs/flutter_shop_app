@@ -11,9 +11,13 @@ class AuthProvider with ChangeNotifier {
   DateTime _expiryDate;
   String _userId;
 
-  Future<void> signUp({String email, String password}) async {
+  Future<void> _authenticate({
+    String email,
+    String password,
+    String urlSegment,
+  }) async {
     final http.Response response = await http.post(
-      '$authUrl/accounts:signUp?key=$apiKey',
+      '$authUrl/accounts:$urlSegment?key=$apiKey',
       body: json.encode({
         "email": email,
         "password": password,
@@ -21,8 +25,22 @@ class AuthProvider with ChangeNotifier {
       }),
     );
 
-    final extractedValue = json.decode(response.body);
+    print(json.decode(response.body));
+  }
 
-    print(extractedValue);
+  Future<void> signUp({String email, String password}) async {
+    return _authenticate(
+      email: email,
+      password: password,
+      urlSegment: "signUp",
+    );
+  }
+
+  Future<void> login({String email, String password}) async {
+    return _authenticate(
+      email: email,
+      password: password,
+      urlSegment: "signInWithPassword",
+    );
   }
 }
