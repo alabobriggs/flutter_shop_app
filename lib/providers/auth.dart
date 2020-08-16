@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class AuthProvider with ChangeNotifier {
   static const String authUrl = "https://identitytoolkit.googleapis.com/v1";
-  static const String apiKey = "AIzaSyCyZv6CTBhcp9j0aJSuK7aSjTzvapdh91s";
+  static final String apiKey = DotEnv().env['FIREBASE_API_KEY'];
 
   String _token;
   DateTime _expiryDate;
