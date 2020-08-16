@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../models/http_exception.dart';
 
 class AuthProvider with ChangeNotifier {
   static const String authUrl = "https://identitytoolkit.googleapis.com/v1";
@@ -16,16 +17,26 @@ class AuthProvider with ChangeNotifier {
     String password,
     String urlSegment,
   }) async {
-    final http.Response response = await http.post(
-      '$authUrl/accounts:$urlSegment?key=$apiKey',
-      body: json.encode({
-        "email": email,
-        "password": password,
-        "returnSecureToken": true,
-      }),
-    );
+    try {
+      final http.Response response = await http.post(
+        '$authUrl/accounts:$urlSegment?key=$apiKey',
+        body: json.encode({
+          "email": email,
+          "password": password,
+          "returnSecureToken": true,
+        }),
+      );
 
-    print(json.decode(response.body));
+      final responseData = json.decode(response.body);
+
+      print(json.decode(response.body));
+
+      if (responseData['error'] != null) {
+        throw HttpException(responseData['error']['message']);
+      }
+    } catch (err) {
+      throw err;
+    }
   }
 
   Future<void> signUp({String email, String password}) async {
