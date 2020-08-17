@@ -19,8 +19,8 @@ class AuthProvider with ChangeNotifier {
   String get token {
     if (_expiryDate != null &&
         _expiryDate.isAfter(DateTime.now()) &&
-        token != null) {
-      return token;
+        _token != null) {
+      return _token;
     }
     return null;
   }
@@ -39,14 +39,18 @@ class AuthProvider with ChangeNotifier {
           "returnSecureToken": true,
         }),
       );
-
       final responseData = json.decode(response.body);
-
       print(json.decode(response.body));
 
       if (responseData['error'] != null) {
         throw HttpException(responseData['error']['message']);
       }
+      _token = responseData['idToken'];
+      _userId = responseData['localId'];
+      _expiryDate = DateTime.now().add(
+        Duration(seconds: int.parse(responseData['expiresIn'])),
+      );
+      notifyListeners();
     } catch (err) {
       throw err;
     }
