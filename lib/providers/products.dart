@@ -12,6 +12,10 @@ class ProductsProvider with ChangeNotifier {
     return [..._items];
   }
 
+  final String authToken;
+
+  ProductsProvider(this.authToken, this._items);
+
   List<ProductModelProvider> get favouriteItems {
     return _items.where((prodItem) => prodItem.isFavourite).toList();
   }
@@ -22,7 +26,8 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> fetchAndSetProducts() async {
     try {
-      http.Response response = await http.get('$baseUrl/products.json');
+      final http.Response response =
+          await http.get('$baseUrl/products.json?auth=$authToken');
       final fetchedproducts =
           json.decode(response.body) as Map<String, dynamic>;
 
@@ -54,8 +59,8 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> addProduct(ProductModelProvider product) async {
     try {
-      http.Response response = await http.post(
-        '$baseUrl/products.json',
+      final http.Response response = await http.post(
+        '$baseUrl/products.json?auth=$authToken',
         body: json.encode({
           'title': product.title,
           'description': product.description,
