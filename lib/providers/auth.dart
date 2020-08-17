@@ -12,6 +12,19 @@ class AuthProvider with ChangeNotifier {
   DateTime _expiryDate;
   String _userId;
 
+  bool get isAuth {
+    return token != null;
+  }
+
+  String get token {
+    if (_expiryDate != null &&
+        _expiryDate.isAfter(DateTime.now()) &&
+        token != null) {
+      return token;
+    }
+    return null;
+  }
+
   Future<void> _authenticate({
     String email,
     String password,
