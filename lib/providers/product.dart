@@ -24,13 +24,13 @@ class ProductModelProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleFavouriteStatus() async {
+  Future<void> toggleFavouriteStatus(String authToken) async {
     final oldStatus = isFavourite;
     _setFavValue(!isFavourite);
 
     try {
       final http.Response response = await http.patch(
-        'https://shop-app-2170f.firebaseio.com/products/$id.json',
+        'https://shop-app-2170f.firebaseio.com/products/$id.json?auth=$authToken',
         body: json.encode({
           'isFavourite': !isFavourite,
         }),
@@ -40,6 +40,7 @@ class ProductModelProvider with ChangeNotifier {
         _setFavValue(oldStatus);
       }
     } catch (err) {
+      print(err);
       _setFavValue(oldStatus);
     }
   }

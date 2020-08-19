@@ -94,7 +94,7 @@ class ProductsProvider with ChangeNotifier {
       final prodIndex = _items.indexWhere((prod) => prod.id == id);
 
       await http.patch(
-        '$baseUrl/products/$id.json',
+        '$baseUrl/products/$id.json?auth=$authToken',
         body: json.encode({
           'title': newProduct.title,
           'description': newProduct.description,
@@ -120,7 +120,7 @@ class ProductsProvider with ChangeNotifier {
     _items.removeAt(existingProductIndex);
     notifyListeners();
 
-    final response = await http.delete('$baseUrl/products/$id.json');
+    final response = await http.delete('$baseUrl/products/$id.json?auth=$authToken');
 
     if (response.statusCode >= 400) {
       _items.insert(existingProductIndex, existingProduct);

@@ -19,16 +19,21 @@ class OrderItem {
 
 class OrdersProvider with ChangeNotifier {
   static String baseUrl = 'https://shop-app-2170f.firebaseio.com';
-
+  final String authToken;
   List<OrderItem> _orders = [];
 
   List<OrderItem> get orders {
     return [..._orders];
   }
 
+  OrdersProvider(
+    this.authToken,
+    this._orders,
+  );
+
   Future<void> fetchAndSetOrders() async {
     try {
-      http.Response response = await http.get('$baseUrl/orders.json');
+      http.Response response = await http.get('$baseUrl/orders.json?auth=$authToken');
       final extractedOrders =
           json.decode(response.body) as Map<String, dynamic>;
       final List<OrderItem> loadedOrders = [];
@@ -65,7 +70,7 @@ class OrdersProvider with ChangeNotifier {
     try {
       final timestamp = DateTime.now();
       http.Response response = await http.post(
-        '$baseUrl/orders.json',
+        '$baseUrl/orders.json?auth=$authToken',
         body: json.encode({
           'amount': total,
           'products': cartProducts
