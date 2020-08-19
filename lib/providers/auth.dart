@@ -71,4 +71,13 @@ class AuthProvider with ChangeNotifier {
       urlSegment: "signInWithPassword",
     );
   }
+
+  void logout() {
+    _token = null;
+    _userId = null;
+    _expiryDate = null;
+
+    notifyListeners();
+  }
+  
 }
